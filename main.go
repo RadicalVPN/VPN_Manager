@@ -11,5 +11,7 @@ func main() {
 		fmt.Println("[WARN] This program should be run on Linux")
 	}
 
-	wgparser.GetParsedWireguardInfo()
+	for true {
+		wgparser.WireDataToRedis()
+	}
 }
