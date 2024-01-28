@@ -11,7 +11,8 @@ func main() {
 		fmt.Println("[WARN] This program should be run on Linux")
 	}
 
-	for true {
-		wgparser.WireDataToRedis()
-	}
+	wgparser.StartTicker()
+
+	// keep the manager running
+	select {}
 }

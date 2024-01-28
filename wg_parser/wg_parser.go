@@ -8,6 +8,7 @@ import (
 	"radicalvpn/vpn-manager/redis"
 	"strconv"
 	"strings"
+	"time"
 
 	lo "github.com/samber/lo"
 )
@@ -36,9 +37,28 @@ type RedisResult struct {
 
 var lastStats = make(map[string]TrafficInfo)
 
-func WireDataToRedis() {
+func StartTicker() {
+	ticker := time.NewTicker(1 * time.Second)
+	quit := make(chan struct{})
+
+	go func() {
+		for {
+			select {
+			case <-ticker.C:
+				ParseAndWriteData()
+			case <-quit:
+				ticker.Stop()
+				return
+			}
+		}
+	}()
+}
+
+func ParseAndWriteData() {
 	parsed := GetParsedWireguardInfo()
 	hostname, err := os.Hostname()
+
+	fmt.Println("[INFO] Parsing wireguard data")
 
 	if len(parsed) == 0 {
 		fmt.Println("[ERROR] No wireguard data to compute")
