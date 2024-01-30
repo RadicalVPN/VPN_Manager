@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	publishqueue "radicalvpn/vpn-manager/publish_queue"
 	wgparser "radicalvpn/vpn-manager/wg_parser"
 	"runtime"
 )
@@ -12,6 +13,7 @@ func main() {
 	}
 
 	wgparser.StartTicker()
+	publishqueue.Start()
 
 	// keep the manager running
 	select {}
