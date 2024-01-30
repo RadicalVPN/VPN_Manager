@@ -1,4 +1,4 @@
-project_name: radicalvpn_manager
+project_name: vpn-manager
 builds:
   - goos:
       - linux
