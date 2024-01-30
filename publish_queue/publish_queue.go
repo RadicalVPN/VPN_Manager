@@ -22,7 +22,7 @@ func Start() {
 func start() {
 	queueKey := getQueueKey()
 
-	fmt.Println("Started publish queue", queueKey)
+	fmt.Println("[INFO] Started publish queue", queueKey)
 
 	for {
 		redisData := redis.GetNewClient().BRPop(context.Background(), 0, queueKey)
@@ -35,7 +35,7 @@ func start() {
 		data := redisData.Val()[1]
 		message := parseQueueMessage(data)
 
-		fmt.Println("handling queue message from redis")
+		fmt.Println("[INFO] handling queue message from redis")
 
 		f, err := os.Create(wireguardConfigPath)
 		if err != nil {
@@ -49,7 +49,7 @@ func start() {
 
 		f.Close()
 
-		fmt.Println("wrote", count, "bytes to wg0.conf")
+		fmt.Println("[INFO] wrote", count, "bytes to wg0.conf")
 
 		if _, err := cli.Exec("wg", "syncconf", "wg0", wireguardConfigPath); err != nil {
 			fmt.Println("[ERROR] failed to update wg0.conf", err)
