@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	pingcheck "radicalvpn/vpn-manager/ping_check"
+	privacyfirewall "radicalvpn/vpn-manager/privacy_firewall"
 	publishqueue "radicalvpn/vpn-manager/publish_queue"
 	wgparser "radicalvpn/vpn-manager/wg_parser"
 	"runtime"
@@ -16,6 +17,7 @@ func main() {
 	wgparser.StartTicker()
 	publishqueue.Start()
 	pingcheck.Start()
+	privacyfirewall.StartTicker()
 
 	// keep the manager running
 	select {}

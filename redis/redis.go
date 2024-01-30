@@ -32,6 +32,5 @@ func getRedisUrl() string {
 		panic("[ERROR] REDIS_URL environment variable not set")
 	}
 
-
 	return url
 }
