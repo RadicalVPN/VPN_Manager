@@ -115,10 +115,6 @@ func ParseAndWriteData() {
 			}
 		}
 
-		if connected {
-			fmt.Println("[INFO] Connected", vpn.publicKey)
-		}
-
 		redisResults[vpn.publicKey] = RedisResult{
 			PublicKey: vpn.publicKey,
 			Tx:        tx,
