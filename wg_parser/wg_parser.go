@@ -29,10 +29,12 @@ type WireguardInfo struct {
 }
 
 type RedisResult struct {
-	PublicKey string `json:"publicKey"`
-	Tx        int    `json:"transferTx"`
-	Rx        int    `json:"transferRx"`
-	Connected bool   `json:"connected"`
+	PublicKey  string `json:"publicKey"`
+	Tx         int    `json:"tx"`
+	Rx         int    `json:"rx"`
+	TransferTx int    `json:"transferTx"`
+	TransferRx int    `json:"transferRx"`
+	Connected  bool   `json:"connected"`
 }
 
 var lastStats = make(map[string]TrafficInfo)
@@ -114,10 +116,12 @@ func ParseAndWriteData() {
 		}
 
 		redisResults[vpn.publicKey] = RedisResult{
-			PublicKey: vpn.publicKey,
-			Tx:        tx,
-			Rx:        rx,
-			Connected: connected,
+			PublicKey:  vpn.publicKey,
+			Tx:         tx,
+			Rx:         rx,
+			TransferTx: vpn.transferTx,
+			TransferRx: vpn.transferRx,
+			Connected:  connected,
 		}
 	})
 
