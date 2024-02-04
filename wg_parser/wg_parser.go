@@ -30,8 +30,8 @@ type WireguardInfo struct {
 
 type RedisResult struct {
 	PublicKey string `json:"publicKey"`
-	Tx        int    `json:"tx"`
-	Rx        int    `json:"rx"`
+	Tx        int    `json:"transferTx"`
+	Rx        int    `json:"transferRx"`
 	Connected bool   `json:"connected"`
 }
 
@@ -105,7 +105,7 @@ func ParseAndWriteData() {
 			connected = vpn.transferRx != lastRx || vpn.transferTx != lastTx
 
 			if connected {
-				setErr := redis.GetClient().Set(context.Background(), fmt.Sprintf("vpn_stats:%s", vpn.publicKey), "dummy", 30).Err()
+				setErr := redis.GetClient().Set(context.Background(), fmt.Sprintf("vpn_connection_state:%s", vpn.publicKey), "dummy", 30).Err()
 				if setErr != nil {
 					fmt.Println("[ERROR] Failed to set connection state", err)
 					return
@@ -136,7 +136,7 @@ func GetParsedWireguardInfo() []WireguardInfo {
 	data := getInfoDump()
 	trimmed := strings.TrimSpace(data)
 	split := strings.Split(trimmed, "\n")
-	slice := lo.Slice(split, 1, len(split)-1)
+	slice := lo.Slice(split, 1, len(split))
 
 	return lo.FilterMap(slice, func(line string, index int) (WireguardInfo, bool) {
 		split := strings.Split(line, "\t")
