@@ -2,6 +2,7 @@ package main
 
 import (
 	"radicalvpn/vpn-manager/logger"
+	memstats "radicalvpn/vpn-manager/mem_stats"
 	pingcheck "radicalvpn/vpn-manager/ping_check"
 	privacyfirewall "radicalvpn/vpn-manager/privacy_firewall"
 	publishqueue "radicalvpn/vpn-manager/publish_queue"
@@ -14,10 +15,11 @@ func main() {
 		logger.Warning.Println("This program should be run on Linux")
 	}
 
-	wgparser.StartTicker()
+	wgparser.Start()
 	publishqueue.Start()
 	pingcheck.Start()
-	privacyfirewall.StartTicker()
+	privacyfirewall.Start()
+	memstats.Start()
 
 	// keep the manager running
 	select {}

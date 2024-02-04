@@ -25,7 +25,7 @@ type PrivacyFirewallResponse struct {
 	TotalBlockedRequests map[string]int `json:"blocked"`
 }
 
-func StartTicker() {
+func Start() {
 	ticker := time.NewTicker(1 * time.Second)
 	quit := make(chan struct{})
 

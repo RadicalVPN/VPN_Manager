@@ -40,7 +40,7 @@ type RedisResult struct {
 
 var lastStats = make(map[string]TrafficInfo)
 
-func StartTicker() {
+func Start() {
 	ticker := time.NewTicker(1 * time.Second)
 	quit := make(chan struct{})
 
