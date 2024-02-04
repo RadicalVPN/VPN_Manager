@@ -58,8 +58,6 @@ func ParseAndWriteData() {
 	parsed := GetParsedWireguardInfo()
 	hostname, err := os.Hostname()
 
-	fmt.Println("[INFO] Parsing wireguard data")
-
 	if len(parsed) == 0 {
 		fmt.Println("[ERROR] No wireguard data to compute")
 		return
@@ -122,6 +120,8 @@ func ParseAndWriteData() {
 			Connected: connected,
 		}
 	})
+
+	fmt.Println(fmt.Sprintf("[INFO] Parsed %d wireguard connections", len(parsed)))
 
 	setErr := redis.GetClient().JSONSet(context.Background(), fmt.Sprintf("vpn_stats:%s", hostname), "$", redisResults).Err()
 	if setErr != nil {
