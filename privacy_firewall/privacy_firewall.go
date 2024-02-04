@@ -27,16 +27,12 @@ type PrivacyFirewallResponse struct {
 
 func Start() {
 	ticker := time.NewTicker(1 * time.Second)
-	quit := make(chan struct{})
 
 	go func() {
 		for {
 			select {
 			case <-ticker.C:
 				ComputeMetrics()
-			case <-quit:
-				ticker.Stop()
-				return
 			}
 		}
 	}()

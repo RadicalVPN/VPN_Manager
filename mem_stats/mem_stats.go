@@ -10,16 +10,12 @@ import (
 
 func Start() {
 	ticker := time.NewTicker(5 * time.Second)
-	quit := make(chan struct{})
 
 	go func() {
 		for {
 			select {
 			case <-ticker.C:
 				CollectMemoryUsage()
-			case <-quit:
-				ticker.Stop()
-				return
 			}
 		}
 	}()
@@ -37,5 +33,5 @@ func CollectMemoryUsage() {
 }
 
 func bToMb(b uint64) uint64 {
-    return b / 1024 / 1024
+	return b / 1024 / 1024
 }

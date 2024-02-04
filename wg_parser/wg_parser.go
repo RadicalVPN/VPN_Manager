@@ -42,16 +42,12 @@ var lastStats = make(map[string]TrafficInfo)
 
 func Start() {
 	ticker := time.NewTicker(1 * time.Second)
-	quit := make(chan struct{})
 
 	go func() {
 		for {
 			select {
 			case <-ticker.C:
 				ParseAndWriteData()
-			case <-quit:
-				ticker.Stop()
-				return
 			}
 		}
 	}()
