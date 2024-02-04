@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"radicalvpn/vpn-manager/logger"
 	pingcheck "radicalvpn/vpn-manager/ping_check"
 	privacyfirewall "radicalvpn/vpn-manager/privacy_firewall"
 	publishqueue "radicalvpn/vpn-manager/publish_queue"
@@ -11,7 +11,7 @@ import (
 
 func main() {
 	if runtime.GOOS != "linux" {
-		fmt.Println("[WARN] This program should be run on Linux")
+		logger.Warning.Println("This program should be run on Linux")
 	}
 
 	wgparser.StartTicker()

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"radicalvpn/vpn-manager/logger"
 	"radicalvpn/vpn-manager/redis"
 )
 
@@ -16,17 +17,17 @@ func start() {
 	channel := getPingChannelKey()
 	ctx := context.Background()
 
-	fmt.Println("[INFO] Started ping/pong", channel)
+	logger.Info.Println("Started ping check", channel)
 
 	subscriber := redis.Subscribe(ctx, channel)
 	for {
 		msg, err := subscriber.ReceiveMessage(ctx)
 		if err != nil {
-			fmt.Println("[ERROR] Error reading from redis", err)
+			logger.Error.Println("Error reading from redis", err)
 			return
 		}
 
-		fmt.Println("[INFO] got ping message from control server", msg.Payload)
+		logger.Info.Println("got ping message from control server", msg.Payload)
 		redis.Publish(ctx, getPongChannelKey(), "")
 	}
 }

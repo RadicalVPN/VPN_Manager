@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"radicalvpn/vpn-manager/cli"
+	"radicalvpn/vpn-manager/logger"
 	"radicalvpn/vpn-manager/redis"
 )
 
@@ -22,37 +23,37 @@ func Start() {
 func start() {
 	queueKey := getQueueKey()
 
-	fmt.Println("[INFO] Started publish queue", queueKey)
+	logger.Info.Println("Started publish queue:", queueKey)
 
 	for {
 		redisData := redis.GetNewClient().BRPop(context.Background(), 0, queueKey)
 
 		if redisData.Err() != nil {
-			fmt.Println("[ERROR] Error reading from redis", redisData.Err())
+			logger.Error.Println("Error reading from redis", redisData.Err())
 			return
 		}
 
 		data := redisData.Val()[1]
 		message := parseQueueMessage(data)
 
-		fmt.Println("[INFO] handling queue message from redis")
+		logger.Info.Println("handling queue message from redis")
 
 		f, err := os.Create(wireguardConfigPath)
 		if err != nil {
-			fmt.Println("[ERROR] failed to open wg0.conf", err)
+			logger.Error.Println("failed to open wg0.conf", err)
 		}
 
 		count, err := f.WriteString(message.Config)
 		if err != nil {
-			fmt.Println("[ERROR] failed to write to wg0.conf", err)
+			logger.Error.Println("failed to write to wg0.conf", err)
 		}
 
 		f.Close()
 
-		fmt.Println("[INFO] wrote", count, "bytes to wg0.conf")
+		logger.Info.Println("wrote", count, "bytes to wg0.conf")
 
 		if _, err := cli.Exec("wg", "syncconf", "wg0", wireguardConfigPath); err != nil {
-			fmt.Println("[ERROR] failed to update wg0.conf", err)
+			logger.Error.Println("failed to update wg0.conf", err)
 		}
 	}
 }
@@ -63,7 +64,7 @@ func parseQueueMessage(data string) PublishQueueMessage {
 	err := json.Unmarshal([]byte(data), &message)
 
 	if err != nil {
-		fmt.Println("[ERROR] Error parsing queue message", err)
+		logger.Error.Println("Error parsing queue message", err)
 	}
 
 	return message

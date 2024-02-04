@@ -7,6 +7,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"radicalvpn/vpn-manager/logger"
 	"radicalvpn/vpn-manager/redis"
 	"regexp"
 	"strings"
@@ -45,17 +46,17 @@ func ComputeMetrics() {
 	data := computePrivacyFirewallStats()
 	hostname, err := os.Hostname()
 	if err != nil {
-		fmt.Println("[ERROR] Failed to get hostname", err)
+		logger.Error.Println("failed to get hostname", err)
 		return
 	}
 
 	setErr := redis.GetClient().JSONSet(context.Background(), fmt.Sprintf("privacy_firewall_stats:%s", hostname), "$", data).Err()
 	if setErr != nil {
-		fmt.Println("[ERROR] Failed to set redis data", err)
+		logger.Error.Println("failed to set redis data", setErr)
 		return
 	}
 
-	fmt.Println("[INFO] Updated privacy firewall stats")
+	logger.Info.Println("Updated privacy firewall stats")
 }
 
 func computePrivacyFirewallStats() PrivacyFirewallResponse {
@@ -67,13 +68,13 @@ func computePrivacyFirewallStats() PrivacyFirewallResponse {
 	for _, ip := range ips {
 		data, err := getMetricsFromIp(ip)
 		if err != nil {
-			fmt.Println(err)
+			logger.Error.Println("failed to get metrics from", ip, err)
 			continue
 		}
 
 		mf, err := parser.TextToMetricFamilies(strings.NewReader(data))
 		if err != nil {
-			fmt.Println("[ERROR] Failed to parse prometheus metrics from", ip, err)
+			logger.Error.Println("failed to parse prometheus metrics from", ip, err)
 		}
 
 		for k, v := range mf {

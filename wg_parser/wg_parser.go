@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"radicalvpn/vpn-manager/cli"
+	"radicalvpn/vpn-manager/logger"
 	"radicalvpn/vpn-manager/redis"
 	"strconv"
 	"strings"
@@ -61,12 +62,12 @@ func ParseAndWriteData() {
 	hostname, err := os.Hostname()
 
 	if len(parsed) == 0 {
-		fmt.Println("[ERROR] No wireguard data to compute")
+		logger.Error.Println("No wireguard data to compute")
 		return
 	}
 
 	if err != nil {
-		fmt.Println("[ERROR] Failed to get hostname")
+		logger.Error.Println("Failed to get hostname", err)
 		return
 	}
 
@@ -83,7 +84,7 @@ func ParseAndWriteData() {
 	})
 	connectionStateResult, err := redis.GetClient().MGet(context.Background(), connectionStateKeys...).Result()
 	if err != nil {
-		fmt.Println("[ERROR] Failed to get connection states from redis", err)
+		logger.Error.Println("Failed to get connection states from redis", err)
 		return
 	}
 
@@ -109,7 +110,7 @@ func ParseAndWriteData() {
 			if connected {
 				setErr := redis.GetClient().Set(context.Background(), fmt.Sprintf("vpn_connection_state:%s", vpn.publicKey), "dummy", time.Second*30).Err()
 				if setErr != nil {
-					fmt.Println("[ERROR] Failed to set connection state", err)
+					logger.Error.Println("Failed to set connection state", err)
 					return
 				}
 			}
@@ -125,11 +126,11 @@ func ParseAndWriteData() {
 		}
 	})
 
-	fmt.Println(fmt.Sprintf("[INFO] Parsed %d wireguard connections", len(parsed)))
+	logger.Debug.Println(fmt.Sprintf("Parsed %d wireguard connections", len(parsed)))
 
 	setErr := redis.GetClient().JSONSet(context.Background(), fmt.Sprintf("vpn_stats:%s", hostname), "$", redisResults).Err()
 	if setErr != nil {
-		fmt.Println("[ERROR] Failed to set redis data", err)
+		logger.Error.Println("Failed to set redis data", err)
 		return
 	}
 
@@ -148,7 +149,7 @@ func GetParsedWireguardInfo() []WireguardInfo {
 		tx, err := strconv.Atoi(split[6])
 
 		if err != nil {
-			fmt.Println("[ERROR] Failed to parse rx/tx")
+			logger.Error.Println("failed to parse rx/tx", err)
 			return WireguardInfo{}, false
 		}
 
@@ -167,7 +168,7 @@ func GetParsedWireguardInfo() []WireguardInfo {
 func getInfoDump() string {
 	result, err := cli.Exec("wg", "show", "wg0", "dump")
 	if err != nil {
-		fmt.Println("[ERROR] Failed to execute wg command")
+		logger.Error.Println("Failed to execute wg command", err)
 		return ""
 	}
 

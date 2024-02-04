@@ -2,8 +2,8 @@ package redis
 
 import (
 	"context"
-	"fmt"
 	"os"
+	"radicalvpn/vpn-manager/logger"
 
 	"github.com/redis/go-redis/v9"
 )
@@ -25,7 +25,7 @@ func GetNewClient() *redis.Client {
 		Password: "",
 		DB:       0,
 		OnConnect: func(ctx context.Context, cn *redis.Conn) error {
-			fmt.Println("[DEBUG] Connected to Redis", cn.ClientID(ctx))
+			logger.Debug.Println("connected to redis", cn.ClientID(ctx))
 			return nil
 		},
 	})
@@ -35,7 +35,7 @@ func getRedisUrl() string {
 	url := os.Getenv("REDIS_URL")
 
 	if url == "" {
-		panic("[ERROR] REDIS_URL environment variable not set")
+		logger.Error.Fatalln("[ERROR] REDIS_URL environment variable not set")
 	}
 
 	return url
