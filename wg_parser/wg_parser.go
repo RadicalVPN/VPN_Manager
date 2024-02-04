@@ -104,7 +104,7 @@ func ParseAndWriteData() {
 			connected = vpn.transferRx != lastRx || vpn.transferTx != lastTx
 
 			if connected {
-				setErr := redis.GetClient().Set(context.Background(), fmt.Sprintf("vpn_connection_state:%s", vpn.publicKey), "dummy", time.Second*30).Err()
+				setErr := redis.GetClient().Set(context.Background(), fmt.Sprintf("vpn_connection_state:%s", vpn.publicKey), "dummy", 30*time.Second).Err()
 				if setErr != nil {
 					logger.Error.Println("Failed to set connection state", err)
 					return
