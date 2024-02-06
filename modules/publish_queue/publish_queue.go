@@ -49,8 +49,6 @@ func start() {
 			logger.Error.Println("failed to write to wg0.conf", err)
 		}
 
-
-
 		logger.Info.Println("wrote", count, "bytes to wg0.conf")
 
 		if _, err := cli.Exec("wg", "syncconf", "wg0", wireguardConfigPath); err != nil {

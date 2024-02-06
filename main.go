@@ -6,6 +6,7 @@ import (
 	pingcheck "radicalvpn/vpn-manager/modules/ping_check"
 	privacyfirewall "radicalvpn/vpn-manager/modules/privacy_firewall"
 	publishqueue "radicalvpn/vpn-manager/modules/publish_queue"
+	serverloadcalculatorgo "radicalvpn/vpn-manager/modules/server_load_calculator.go"
 	wgparser "radicalvpn/vpn-manager/modules/wg_parser"
 	"runtime"
 )
@@ -20,6 +21,7 @@ func main() {
 	pingcheck.Start()
 	privacyfirewall.Start()
 	memstats.Start()
+	serverloadcalculatorgo.Start()
 
 	// keep the manager running
 	select {}
