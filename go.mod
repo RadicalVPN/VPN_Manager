@@ -1,6 +1,6 @@
 module radicalvpn/vpn-manager
 
-go 1.21.6
+go 1.21
 
 require (
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
