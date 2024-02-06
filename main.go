@@ -1,12 +1,12 @@
 package main
 
 import (
-	"radicalvpn/vpn-manager/logger"
-	memstats "radicalvpn/vpn-manager/mem_stats"
-	pingcheck "radicalvpn/vpn-manager/ping_check"
-	privacyfirewall "radicalvpn/vpn-manager/privacy_firewall"
-	publishqueue "radicalvpn/vpn-manager/publish_queue"
-	wgparser "radicalvpn/vpn-manager/wg_parser"
+	"radicalvpn/vpn-manager/helpers/logger"
+	memstats "radicalvpn/vpn-manager/modules/mem_stats"
+	pingcheck "radicalvpn/vpn-manager/modules/ping_check"
+	privacyfirewall "radicalvpn/vpn-manager/modules/privacy_firewall"
+	publishqueue "radicalvpn/vpn-manager/modules/publish_queue"
+	wgparser "radicalvpn/vpn-manager/modules/wg_parser"
 	"runtime"
 )
 

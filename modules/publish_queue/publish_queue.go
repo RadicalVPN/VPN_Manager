@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"radicalvpn/vpn-manager/cli"
-	"radicalvpn/vpn-manager/logger"
-	"radicalvpn/vpn-manager/redis"
+	"radicalvpn/vpn-manager/helpers/cli"
+	"radicalvpn/vpn-manager/helpers/logger"
+	"radicalvpn/vpn-manager/helpers/redis"
 )
 
 var wireguardConfigPath = "/etc/wireguard/wg0.conf"

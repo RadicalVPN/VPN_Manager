@@ -3,7 +3,7 @@ package redis
 import (
 	"context"
 	"os"
-	"radicalvpn/vpn-manager/logger"
+	"radicalvpn/vpn-manager/helpers/logger"
 
 	"github.com/redis/go-redis/v9"
 )

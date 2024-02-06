@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"radicalvpn/vpn-manager/logger"
-	"radicalvpn/vpn-manager/redis"
+	"radicalvpn/vpn-manager/helpers/logger"
+	"radicalvpn/vpn-manager/helpers/redis"
 )
 
 func Start() {
