@@ -42,13 +42,14 @@ func start() {
 		if err != nil {
 			logger.Error.Println("failed to open wg0.conf", err)
 		}
+		defer f.Close()
 
 		count, err := f.WriteString(message.Config)
 		if err != nil {
 			logger.Error.Println("failed to write to wg0.conf", err)
 		}
 
-		f.Close()
+
 
 		logger.Info.Println("wrote", count, "bytes to wg0.conf")
 
