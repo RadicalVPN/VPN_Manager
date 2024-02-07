@@ -11,9 +11,12 @@ import (
 )
 
 const (
-	rxFilePath = "/sys/class/net/wg0/statistics/rx_bytes"
-	txFilePath = "/sys/class/net/wg0/statistics/tx_bytes"
+	basePath  = "/sys/class/net/eth0/statistics/"
 	maxLoad    = 2000.0 // 2 Gigabit
+
+	rxFilePath = basePath + "rx_bytes"
+	txFilePath = basePath + "tx_bytes"
+	
 )
 
 type InterfaceLoad struct {
@@ -93,8 +96,8 @@ func updateHistory(rxMbps float64, txMbps float64) {
 		TxMbps: txMbps,
 	})
 
-	// only keep the last 60 seconds
-	if len(loadHistory) > 60 {
+	// only keep the last 30 seconds
+	if len(loadHistory) > 30 {
 		loadHistory = loadHistory[1:]
 	}
 }
