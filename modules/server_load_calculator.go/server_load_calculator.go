@@ -65,10 +65,9 @@ func computeLoad() {
 	rxAvg, txAvg := getAverageLoad()
 
 	// calculate load percentage
-	loadPercentage := (rxAvg + txAvg) / maxLoad
-	fmt.Printf("current load: %.2f%%\n", loadPercentage*100)
+	loadPercent := fmt.Sprintf("%.2f", ((rxAvg+txAvg)/maxLoad)*100)
 
-	redis.GetClient().Set(context.Background(), getRedisKey(), loadPercentage, 30*time.Second)
+	redis.GetClient().Set(context.Background(), getRedisKey(), loadPercent, 30*time.Second)
 
 	updateLastLoad(rxBytes, txBytes)
 }
@@ -141,5 +140,5 @@ func getRedisKey() string {
 		panic(err)
 	}
 
-	return fmt.Sprintf("server-load:%s", hostname)
+	return fmt.Sprintf("server-load-percent:%s", hostname)
 }
