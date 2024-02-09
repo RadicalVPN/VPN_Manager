@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"radicalvpn/vpn-manager/helpers/logger"
 	"radicalvpn/vpn-manager/helpers/redis"
 	"strconv"
 	"strings"
@@ -11,12 +12,14 @@ import (
 )
 
 const (
-	basePath  = "/sys/class/net/eth0/statistics/"
-	maxLoad    = 2000.0 // 2 Gigabit
+	basePath         = "/sys/class/net/eth0/statistics/"
 
 	rxFilePath = basePath + "rx_bytes"
 	txFilePath = basePath + "tx_bytes"
-	
+)
+
+var (
+	maxLoad = getMaxServerCapacity()
 )
 
 type InterfaceLoad struct {
@@ -144,4 +147,19 @@ func getRedisKey() string {
 	}
 
 	return fmt.Sprintf("server-load-percent:%s", hostname)
+}
+
+func getMaxServerCapacity() float64 {
+	data := os.Getenv("MAX_SERVER_CAPACITY")
+
+	if data == "" {
+		logger.Error.Fatalln("[ERROR] MAX_SERVER_CAPACITY environment variable not set")
+	}
+
+	maxCapacity, err := strconv.ParseFloat(data, 64)
+	if err != nil {
+		logger.Error.Fatalln("[ERROR] Failed to parse MAX_SERVER_CAPACITY", err)
+	}
+
+	return maxCapacity
 }
